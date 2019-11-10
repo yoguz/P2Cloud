@@ -19,7 +19,7 @@ import java.util.List;
 public class Dropbox {
     private static Dropbox instance;
 
-    private static final String ACCESS_TOKEN = "SPbzk9LCpzAAAAAAAAAADOmhEwIlZiFBPy-Dg6BJl53e2_NRfzXPagPZrysoVa6A";
+    private static final String ACCESS_TOKEN = "SPbzk9LCpzAAAAAAAAAADqikekU4CqzW4atXPrjoT9Zcu9nsQuW5Yzoxr0kXDR8f";
     private static DbxRequestConfig config;
     private static DbxClientV2 client;
 
@@ -68,7 +68,7 @@ public class Dropbox {
     public static boolean upload(String localFilePath, String remoteFilePath) {
         System.out.println("Dropbox:upload | localPath:" + localFilePath);
         try (InputStream in = new FileInputStream(localFilePath)) {
-            FileMetadata metadata = client.files().uploadBuilder("mesut.jpg")
+            FileMetadata metadata = client.files().uploadBuilder("/mesut.jpg")
                     .uploadAndFinish(in);
             return true;
         } catch (FileNotFoundException e) {

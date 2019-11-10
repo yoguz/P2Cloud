@@ -8,13 +8,11 @@
     android:fitsSystemWindows="true">
 
     <!-- Layout to contain contents of main body of screen (drawer will slide over this) -->
-    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:keepScreenOn="true"
         tools:context=".ui.main.CameraActivity">
-
 
         <TextureView
             android:id="@+id/texture"
@@ -26,42 +24,16 @@
             tools:layout_editor_absoluteX="1dp" />
 
         <Button
-            android:id="@+id/btn_takepicture"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_above="@+id/button"
-            android:layout_toStartOf="@+id/spinner4"
-            android:background="@drawable/shoot"
-            tools:layout_editor_absoluteX="157dp"
-            tools:layout_editor_absoluteY="498dp" />
-
-        <Button
-            android:id="@+id/button"
+            android:id="@+id/btn_take"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="659dp"
             android:background="@drawable/shoot"
             tools:layout_editor_absoluteX="157dp"
             tools:layout_editor_absoluteY="498dp" />
 
-        <Spinner
-            android:id="@+id/spinner4"
-            android:layout_width="157dp"
-            android:layout_height="66dp"
-            android:layout_alignTop="@+id/btn_takepicture"
-            android:layout_alignEnd="@+id/texture"
-            tools:layout_editor_absoluteX="227dp"
-            tools:layout_editor_absoluteY="497dp" />
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="153dp"
-            android:layout_height="66dp"
-            android:layout_alignTop="@+id/btn_takepicture"
-            android:layout_toStartOf="@+id/btn_takepicture"
-            tools:layout_editor_absoluteX="-1dp"
-            tools:layout_editor_absoluteY="498dp" />
     </RelativeLayout>
 
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
