@@ -21,10 +21,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
 
 import com.etuproject.p2cloud.R;
 import com.etuproject.p2cloud.ui.login.LoginViewModel;
 import com.etuproject.p2cloud.ui.login.LoginViewModelFactory;
+import com.etuproject.p2cloud.ui.main.CameraActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -69,7 +71,8 @@ public class LoginActivity extends AppCompatActivity {
                     showLoginFailed(loginResult.getError());
                 }
                 if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
+                    //updateUiWithUser(loginResult.getSuccess());
+                    startActivity(new Intent(LoginActivity.this,CameraActivity.class));
                 }
                 setResult(Activity.RESULT_OK);
 
