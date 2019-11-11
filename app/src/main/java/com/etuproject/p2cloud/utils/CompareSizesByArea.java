@@ -1,4 +1,4 @@
-package com.etuproject.p2cloud.ui.main;
+package com.etuproject.p2cloud.utils;
 
 /**
  * Created by MesutKutlu on 10.03.2018.

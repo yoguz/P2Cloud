@@ -11,10 +11,8 @@
     <string name="login_failed">"Login failed"</string>
     <string name="take_picture">Take picture</string>
     <string name="record">Record</string>
-    <string name="video">Video</string>
     <string name="photo">Photo</string>
-    <string name="rawPhoto">Raw Photo</string>
-    <string name="properties">Properties</string>
+    <string name="gallery">Gallery</string>
     <string name="stop">Stop</string>
     <string name="description_info">Info</string>
     <string name="permission_request">This sample needs permission for camera and audio recording.</string>

@@ -48,12 +48,12 @@ import java.util.Collections;
 import java.util.List;
 
 import com.etuproject.p2cloud.R;
-import com.etuproject.p2cloud.utils.Dropbox;
+import com.etuproject.p2cloud.utils.CompareSizesByArea;
+import com.etuproject.p2cloud.utils.cloud.Dropbox;
 import com.google.android.material.navigation.NavigationView;
 
 public class CameraActivity extends AppCompatActivity {
 
-    private ArrayList<Size> resolutions;
     private String camId = "none";
     private DrawerLayout mDrawerLayout;
     private final String TAG = "AndroidCameraApi";
@@ -87,7 +87,6 @@ public class CameraActivity extends AppCompatActivity {
         textureView.setSurfaceTextureListener(textureListener);
         Button takePictureButton = findViewById(R.id.btn_take);
         assert takePictureButton != null;
-        resolutions = new ArrayList<>();
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,6 +107,9 @@ public class CameraActivity extends AppCompatActivity {
                         mDrawerLayout.closeDrawers();
                         if (menuItem.getTitle().toString().equals("Photo")) {
                             startActivity(new Intent(CameraActivity.this, CameraActivity.class));
+                        } else if (menuItem.getTitle().toString().equals("Gallery")) {
+                            closeCamera();
+                            startActivity(new Intent(CameraActivity.this, GalleryActivity.class));
                         }
                         return true;
                     }
