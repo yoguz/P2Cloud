@@ -6,6 +6,7 @@ public class Image {
 
     private String title;
     private Bitmap bitmap;
+    private boolean selected;
 
     public String getImageTitle() {
         return title;
@@ -21,5 +22,13 @@ public class Image {
 
     public void setImageBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

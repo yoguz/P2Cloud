@@ -1,6 +1,7 @@
 package com.etuproject.p2cloud.ui.main;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,10 +31,19 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        viewHolder.title.setText(galleryList.get(i).getImageTitle());
+    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
+        final Image image = galleryList.get(i);
+        viewHolder.title.setText(image.getImageTitle());
         viewHolder.img.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        viewHolder.img.setImageBitmap((galleryList.get(i).getImageBitmap()));
+        viewHolder.img.setBackgroundColor(image.isSelected() ? Color.DKGRAY : Color.WHITE);
+        viewHolder.img.setImageBitmap((image.getImageBitmap()));
+        viewHolder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                image.setSelected(!image.isSelected());
+                viewHolder.img.setBackgroundColor(image.isSelected() ? Color.DKGRAY : Color.WHITE);
+            }
+        });
     }
 
     @Override
