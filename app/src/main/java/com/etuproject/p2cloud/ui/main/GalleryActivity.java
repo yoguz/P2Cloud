@@ -15,9 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.etuproject.p2cloud.R;
 import com.etuproject.p2cloud.data.model.Image;
+import com.etuproject.p2cloud.utils.AES;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class GalleryActivity  extends AppCompatActivity {
@@ -56,19 +61,35 @@ public class GalleryActivity  extends AppCompatActivity {
                     }
                 });
     }
+
+    /**
+     * P2Cloud dosya dizini altında yer alan bütün encrypted resimleri enrypt edip
+     * Image listesi olarak dönen method.
+     * @return ArrayList<Image>
+     */
     private ArrayList<Image> prepareData(){
-        String path = Environment.getExternalStorageDirectory() + "/P2Cloud/Photo";
-        File directory = new File(path);
-        File[] files = directory.listFiles();
-        ArrayList<Image> images = new ArrayList<>();
-        for (int i = 0; i < files.length; i++)
-        {
-            Image image = new Image();
-            image.setImageTitle(files[i].getName());
-            Bitmap bitmap = BitmapFactory.decodeFile(files[i].getAbsolutePath());
-            image.setImageBitmap(bitmap);
-            images.add(image);
+        try {
+            AES aes = new AES();
+            String path = Environment.getExternalStorageDirectory() + "/P2Cloud/Photo";
+            File directory = new File(path);
+            File[] files = directory.listFiles();
+            ArrayList<Image> images = new ArrayList<>();
+            for (int i = 0; i < files.length; i++) {
+                Image image = new Image();
+                image.setImageTitle(files[i].getName());
+                byte fileContent[] = new byte[(int)files[i].length()];
+                InputStream stream = new FileInputStream(files[i]);
+                stream.read(fileContent);
+                String byteString = new String(fileContent, StandardCharsets.ISO_8859_1);
+                String decryptedString = aes.decrypt(byteString);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(decryptedString.getBytes(StandardCharsets.ISO_8859_1), 0, decryptedString.getBytes(StandardCharsets.ISO_8859_1).length);
+                image.setImageBitmap(bitmap);
+                images.add(image);
+                stream.close();
+            }
+            return images;
+        } catch (IOException ex) {
+            return null;
         }
-        return images;
     }
 }

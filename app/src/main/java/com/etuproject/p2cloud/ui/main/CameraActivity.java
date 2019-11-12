@@ -42,12 +42,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import com.etuproject.p2cloud.R;
+import com.etuproject.p2cloud.utils.AES;
 import com.etuproject.p2cloud.utils.CompareSizesByArea;
 import com.etuproject.p2cloud.utils.cloud.Dropbox;
 import com.google.android.material.navigation.NavigationView;
@@ -254,7 +256,7 @@ public class CameraActivity extends AppCompatActivity {
                 dir3.mkdir();
             }
 
-            file = new File(dir3 + "/" + System.currentTimeMillis() + ".jpg");
+            file = new File(dir3 + "/" + System.currentTimeMillis());
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
@@ -275,8 +277,11 @@ public class CameraActivity extends AppCompatActivity {
                 private void save(byte[] bytes) throws IOException {
                     OutputStream output = null;
                     try {
+                        String byteString = new String(bytes, StandardCharsets.ISO_8859_1);
+                        AES aes = new AES();
+                        String encryptedString = aes.encrypt(byteString);
                         output = new FileOutputStream(file);
-                        output.write(bytes);
+                        output.write(encryptedString.getBytes(StandardCharsets.ISO_8859_1));
                     } finally {
                         if (null != output) {
                             output.close();
