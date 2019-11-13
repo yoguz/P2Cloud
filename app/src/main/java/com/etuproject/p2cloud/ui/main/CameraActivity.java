@@ -43,14 +43,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import com.etuproject.p2cloud.R;
-import com.etuproject.p2cloud.utils.AES;
 import com.etuproject.p2cloud.utils.CompareSizesByArea;
+import com.etuproject.p2cloud.utils.Crypto;
 import com.etuproject.p2cloud.utils.cloud.Dropbox;
 import com.google.android.material.navigation.NavigationView;
 
@@ -265,7 +266,7 @@ public class CameraActivity extends AppCompatActivity {
                         byte[] bytes = new byte[buffer.capacity()];
                         buffer.get(bytes);
                         save(bytes);
-                    } catch (IOException e) {
+                    } catch (IOException | NoSuchAlgorithmException e) {
                         e.printStackTrace();
                     } finally {
                         if (!file.getPath().equals("")) {
@@ -274,12 +275,22 @@ public class CameraActivity extends AppCompatActivity {
                     }
                 }
 
-                private void save(byte[] bytes) throws IOException {
+                /**
+                 * Kaydedilecek resim byte arrayini encrypt ediyoruz.
+                 * Encrypt edilmiş içeriğin stringi ile hashini alarak ayrı bir dosya oluşturuyor ve ismini bu hashi veriyoruz.
+                 * İçeriğine ise encryp için kullanılan keyi veriyoruz.
+                 * @param bytes
+                 * @throws IOException
+                 */
+                private void save(byte[] bytes) throws IOException, NoSuchAlgorithmException {
                     OutputStream output = null;
                     try {
                         String byteString = new String(bytes, StandardCharsets.ISO_8859_1);
-                        AES aes = new AES();
-                        String encryptedString = aes.encrypt(byteString);
+                        Crypto cryptoFunctions = new Crypto();
+                        String encryptedString = cryptoFunctions.encrypt(byteString);
+                        byte[] hash = cryptoFunctions.hash(encryptedString);
+                        String hexOfHash = cryptoFunctions.bytesToHex(hash);
+                        //TODO: Buraya drive upload tamamlandığında eklemeler yapılacak.
                         output = new FileOutputStream(file);
                         output.write(encryptedString.getBytes(StandardCharsets.ISO_8859_1));
                     } finally {

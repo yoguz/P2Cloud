@@ -1,11 +1,16 @@
 package com.etuproject.p2cloud.utils;
 
 import org.apache.commons.codec.binary.Base64;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class AES {
+public class Crypto {
     private static final String key = "aesEncryptionKey";
     private static final String initVector = "encryptionIntVec";
 
@@ -50,5 +55,19 @@ public class AES {
         }
 
         return null;
+    }
+    public byte[] hash(String plaintext) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        return digest.digest(
+                plaintext.getBytes(StandardCharsets.ISO_8859_1));
+    }
+    public String bytesToHex(byte[] hash) {
+        StringBuffer hexString = new StringBuffer();
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if(hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        return hexString.toString();
     }
 }

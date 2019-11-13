@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.etuproject.p2cloud.R;
 import com.etuproject.p2cloud.data.model.Image;
-import com.etuproject.p2cloud.utils.AES;
+import com.etuproject.p2cloud.utils.Crypto;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
@@ -69,7 +69,7 @@ public class GalleryActivity  extends AppCompatActivity {
      */
     private ArrayList<Image> prepareData(){
         try {
-            AES aes = new AES();
+            Crypto aes = new Crypto();
             String path = Environment.getExternalStorageDirectory() + "/P2Cloud/Photo";
             File directory = new File(path);
             File[] files = directory.listFiles();
