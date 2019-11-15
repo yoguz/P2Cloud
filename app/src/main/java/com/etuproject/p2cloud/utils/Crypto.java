@@ -14,7 +14,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto {
-    private static String key = "aesEncryptionKey";
+    private static byte[] key = new byte[16];
     private static String initVector = "encryptionIntVec";
 
     /**
@@ -26,7 +26,7 @@ public class Crypto {
         try {
             key = generateKey();
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+            SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
@@ -47,7 +47,7 @@ public class Crypto {
     public String decrypt(String encrypted) {
         try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+            SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
@@ -75,12 +75,12 @@ public class Crypto {
         return hexString.toString();
     }
 
-    public static String generateKey() throws NoSuchAlgorithmException {
+    public static byte[] generateKey() throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
         SecureRandom secureRandom = new SecureRandom();
         int keyBitSize = 128;
         keyGen.init(keyBitSize, secureRandom);
         SecretKey secretKey = keyGen.generateKey();
-        return secretKey.getFormat();
+        return secretKey.getEncoded();
     }
 }
