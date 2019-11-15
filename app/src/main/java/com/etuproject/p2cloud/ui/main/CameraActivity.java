@@ -270,7 +270,7 @@ public class CameraActivity extends AppCompatActivity {
                         e.printStackTrace();
                     } finally {
                         if (!file.getPath().equals("")) {
-                            Dropbox.getInstance().upload(file.getPath(), "");
+                            Dropbox.getInstance().upload(file.getPath(), ""+System.currentTimeMillis());
                         }
                     }
                 }
@@ -288,8 +288,7 @@ public class CameraActivity extends AppCompatActivity {
                         String byteString = new String(bytes, StandardCharsets.ISO_8859_1);
                         Crypto cryptoFunctions = new Crypto();
                         String encryptedString = cryptoFunctions.encrypt(byteString);
-                        byte[] hash = cryptoFunctions.hash(encryptedString);
-                        String hexOfHash = cryptoFunctions.bytesToHex(hash);
+                        String hexOfHash = cryptoFunctions.hash(encryptedString);
                         //TODO: Buraya drive upload tamamlandığında eklemeler yapılacak.
                         output = new FileOutputStream(file);
                         output.write(encryptedString.getBytes(StandardCharsets.ISO_8859_1));

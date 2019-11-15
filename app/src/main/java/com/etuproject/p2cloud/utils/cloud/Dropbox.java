@@ -66,7 +66,7 @@ public class Dropbox {
     public static boolean upload(String localFilePath, String remoteFilePath) {
         System.out.println("Dropbox:upload | localPath:" + localFilePath);
         try (InputStream in = new FileInputStream(localFilePath)) {
-            FileMetadata metadata = client.files().uploadBuilder("/mesut.jpg")
+            FileMetadata metadata = client.files().uploadBuilder("/" + remoteFilePath)
                     .uploadAndFinish(in);
             return true;
         } catch (FileNotFoundException e) {
