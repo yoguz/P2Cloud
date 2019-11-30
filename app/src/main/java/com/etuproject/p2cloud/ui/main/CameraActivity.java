@@ -113,6 +113,8 @@ public class CameraActivity extends AppCompatActivity {
                         } else if (menuItem.getTitle().toString().equals("Gallery")) {
                             closeCamera();
                             startActivity(new Intent(CameraActivity.this, GalleryActivity.class));
+                        } else if (menuItem.getTitle().toString().equals("Cloud Tokens")) {
+                            startActivity(new Intent(CameraActivity.this, TokenActivity.class));
                         }
                         return true;
                     }
@@ -270,7 +272,7 @@ public class CameraActivity extends AppCompatActivity {
                         e.printStackTrace();
                     } finally {
                         if (!file.getPath().equals("")) {
-                            Dropbox.getInstance().upload(file.getPath(), ""+System.currentTimeMillis());
+                            Dropbox.getInstance().upload(file.getPath(), "" + System.currentTimeMillis());
                         }
                     }
                 }

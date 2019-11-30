@@ -5,7 +5,10 @@
             android:id="@+id/nav_camera"
             android:title="@string/photo" />
         <item
-            android:id="@+id/nav_properties"
-            android:title="@string/gallery" />
+        android:id="@+id/nav_properties"
+        android:title="@string/gallery" />
+        <item
+            android:id="@+id/nav_token"
+            android:title="@string/tokens" />
     </group>
 </menu>

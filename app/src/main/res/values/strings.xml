@@ -22,4 +22,16 @@
     <string name="video_button">Video Record Button</string>
     <string name="camera_button">Camera Capture Button</string>
     <string name="stillCap">Still Capture</string>
+    <string name="message_enter_pin">Enter PIN</string>
+    <string name="message_enter_new_pin">Enter new PIN</string>
+    <string name="message_confirm_pin">Re enter PIN</string>
+    <string name="message_invalid_pin">Invalid PIN. Try again</string>
+    <string name="message_pin_mismatch">PIN mismatch. Try again</string>
+
+    <string name="button_cancel">Cancel</string>
+    <string name="tokens">Cloud Tokens</string>
+    <string name="ctoken">Cloud Token 1</string>
+    <string name="ctoken2">Cloud Token 2</string>
+    <string name="save">Save</string>
+    <string name="button_forgot_pin">Forgot PIN</string>
 </resources>

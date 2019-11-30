@@ -56,6 +56,8 @@ public class GalleryActivity  extends AppCompatActivity {
                             startActivity(new Intent(GalleryActivity.this, CameraActivity.class));
                         } else if (menuItem.getTitle().toString().equals("Gallery")) {
                             startActivity(new Intent(GalleryActivity.this, GalleryActivity.class));
+                        } else if (menuItem.getTitle().toString().equals("Cloud Tokens")) {
+                            startActivity(new Intent(GalleryActivity.this, TokenActivity.class));
                         }
                         return true;
                     }
@@ -82,9 +84,11 @@ public class GalleryActivity  extends AppCompatActivity {
                 stream.read(fileContent);
                 String byteString = new String(fileContent, StandardCharsets.ISO_8859_1);
                 String decryptedString = aes.decrypt(byteString);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(decryptedString.getBytes(StandardCharsets.ISO_8859_1), 0, decryptedString.getBytes(StandardCharsets.ISO_8859_1).length);
-                image.setImageBitmap(bitmap);
-                images.add(image);
+                if(decryptedString != null) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(decryptedString.getBytes(StandardCharsets.ISO_8859_1), 0, decryptedString.getBytes(StandardCharsets.ISO_8859_1).length);
+                    image.setImageBitmap(bitmap);
+                    images.add(image);
+                }
                 stream.close();
             }
             return images;

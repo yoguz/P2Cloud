@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
@@ -20,11 +21,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".ui.main.CameraActivity"
             android:label="@string/app_name">
 
         </activity>
-        <activity android:name=".ui.main.CameraActivity">
+        <activity android:name=".ui.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,6 +34,9 @@
         </activity>
         <activity android:name=".ui.main.GalleryActivity">
         </activity>
+        <activity android:name=".ui.login.SetPinActivities" />
+        <activity android:name=".ui.login.ConfirmPinActivities" />
+        <activity android:name=".ui.main.TokenActivity"/>
     </application>
 
 </manifest>
