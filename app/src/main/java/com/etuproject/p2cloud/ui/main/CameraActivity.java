@@ -39,12 +39,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,9 +47,7 @@ import java.util.List;
 
 import com.etuproject.p2cloud.R;
 import com.etuproject.p2cloud.utils.CompareSizesByArea;
-import com.etuproject.p2cloud.utils.Crypto;
 import com.etuproject.p2cloud.utils.FileController;
-import com.etuproject.p2cloud.utils.cloud.Dropbox;
 import com.google.android.material.navigation.NavigationView;
 
 public class CameraActivity extends AppCompatActivity {
