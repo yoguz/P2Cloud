@@ -32,11 +32,11 @@ public class Local {
         return instance;
     }
 
-    public static void save(String encyptedFile, String fileName) {
+    public static void save(byte[] encyptedFile, String fileName) {
         OutputStream output = null;
         try {
             output = new FileOutputStream(APP_FOLDER_POSIX + "/" + fileName);
-            output.write(encyptedFile.getBytes(StandardCharsets.ISO_8859_1));
+            output.write(encyptedFile);
             System.out.println("Local || Succesfully saved file: " + fileName);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
