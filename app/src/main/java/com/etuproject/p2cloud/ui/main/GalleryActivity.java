@@ -40,7 +40,7 @@ public class GalleryActivity  extends AppCompatActivity {
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.container);
+        final RecyclerView recyclerView = (RecyclerView)findViewById(R.id.container);
         recyclerView.setHasFixedSize(true);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),2);
@@ -60,10 +60,16 @@ public class GalleryActivity  extends AppCompatActivity {
                         FileController.delete(image.getImageTitle());
                     }
                 }
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
 
         NavigationView navigationView =(NavigationView) findViewById(R.id.nav_view);
+        navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
