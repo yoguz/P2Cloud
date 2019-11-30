@@ -30,7 +30,7 @@ public class FileController {
     }
 
     public static FileController setPrefs(String localKey, String remotePhotoToken, String remoteKeyToken) {
-        Local.setLocalKey(localKey);
+        Local.setLocalKey(localKey + localKey + localKey + localKey);
         Dropbox.setAccessToken(remotePhotoToken);
         return getInstance();
     }
