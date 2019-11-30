@@ -1,7 +1,5 @@
 package com.etuproject.p2cloud.utils;
 
-import org.apache.commons.codec.binary.Base64;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -22,22 +20,21 @@ public class Crypto {
      * @param value
      * @return String
      */
-    public String encrypt(String value, String remoteKey) {
+    public byte[] encrypt(byte[] value, byte[] remoteKey) {
         try {
-            String key;
+            byte[] key;
             if (remoteKey == null) {
-                key = LOCAL_KEY;
+                key = LOCAL_KEY.getBytes();
             } else {
                 key = remoteKey;
             }
             IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+            SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
 
-            byte[] encrypted = cipher.doFinal(value.getBytes());
-            return new String(Base64.encodeBase64(encrypted));
+            return cipher.doFinal(value);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -49,37 +46,36 @@ public class Crypto {
      * @param encrypted
      * @return String
      */
-    public String decrypt(String encrypted, String remoteKey) {
+    public byte[] decrypt(byte[] encrypted, byte[] remoteKey) {
         try {
-            String key;
+            byte[] key;
             if (remoteKey == null) {
-                key = LOCAL_KEY;
+                key = LOCAL_KEY.getBytes();
             } else {
                 key = remoteKey;
             }
             IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+            SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
-            byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
-
-            return new String(original);
+            return cipher.doFinal(encrypted);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
         return null;
     }
-    public String hash(String plaintext) {
+    public String hash(byte[] plaintext) {
         MessageDigest digest = null;
         try {
             digest = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        return bytesToHex(digest.digest(
-                plaintext.getBytes(StandardCharsets.ISO_8859_1)));
+        //return bytesToHex(digest.digest(
+          //      plaintext.getBytes(StandardCharsets.ISO_8859_1)));
+        return bytesToHex(digest.digest(plaintext));
     }
     public String bytesToHex(byte[] hash) {
         StringBuffer hexString = new StringBuffer();
@@ -91,7 +87,7 @@ public class Crypto {
         return hexString.toString();
     }
 
-    public static String generateKey() {
+    public static byte[] generateKey() {
         KeyGenerator keyGen = null;
         try {
             keyGen = KeyGenerator.getInstance("AES");
@@ -99,10 +95,10 @@ public class Crypto {
             int keyBitSize = 128;
             keyGen.init(keyBitSize, secureRandom);
             SecretKey secretKey = keyGen.generateKey();
-            return new String(Base64.encodeBase64(secretKey.getEncoded()));
+            return secretKey.getEncoded();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        return "RemoteEncryption";
+        return null;
     }
 }

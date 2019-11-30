@@ -73,9 +73,9 @@ public class Dropbox {
         }
     }
 
-    public static boolean upload(String fileContent, String fileName, FileType fileType) {
+    public static boolean upload(byte[] fileContent, String fileName, FileType fileType) {
         System.out.println("Dropbox:uploadPhoto | fileName:" + fileName + ", Type:" + fileType);
-        try (InputStream in = new ByteArrayInputStream(fileContent.getBytes())) {
+        try (InputStream in = new ByteArrayInputStream(fileContent)) {
             String prefix;
             if (fileType == FileType.PHOTO) {
                 prefix = PHOTOS_PATH_PREFIX;

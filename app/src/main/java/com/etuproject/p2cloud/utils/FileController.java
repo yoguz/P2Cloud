@@ -28,20 +28,20 @@ public class FileController {
     }
 
     private static void saveToLocal(byte[] bytes, String fileName) {
-        String byteString = new String(bytes, StandardCharsets.ISO_8859_1);
+        //String byteString = new String(bytes, StandardCharsets.ISO_8859_1);
         Crypto cryptoFunctions = new Crypto();
-        String encryptedString = cryptoFunctions.encrypt(byteString, null);
-        Local.getInstance().save(encryptedString, fileName);
+        byte[] encrypted= cryptoFunctions.encrypt(bytes, null);
+        Local.getInstance().save(encrypted, fileName);
     }
 
     private static void saveToCloud(byte[] bytes, String fileName) {
-        String byteString = new String(bytes, StandardCharsets.ISO_8859_1);
-        String key = Crypto.generateKey();
-        System.out.println("FileController || saveToCloud || key:" + key);
+        //String byteString = new String(bytes, StandardCharsets.ISO_8859_1);
+        byte[] key = Crypto.generateKey();
+        System.out.println("FileController || saveToCloud || key:" + new String(key));
         Crypto cryptoFunctions = new Crypto();
-        String encryptedFile = cryptoFunctions.encrypt(byteString, key);
-        String fileHash = cryptoFunctions.hash(encryptedFile);
-        Dropbox.getInstance().upload(encryptedFile, fileName, Dropbox.FileType.PHOTO);
+        byte[] encrypted = cryptoFunctions.encrypt(bytes, key);
+        String fileHash = cryptoFunctions.hash(encrypted);
+        Dropbox.getInstance().upload(encrypted, fileName, Dropbox.FileType.PHOTO);
         Dropbox.getInstance().upload(key, fileHash, Dropbox.FileType.KEY);
     }
 
