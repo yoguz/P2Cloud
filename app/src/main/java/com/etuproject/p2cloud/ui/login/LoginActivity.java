@@ -1,134 +1,124 @@
 package com.etuproject.p2cloud.ui.login;
 
-import android.app.Activity;
+import androidx.annotation.NonNull;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
 
 import com.etuproject.p2cloud.R;
-import com.etuproject.p2cloud.ui.login.LoginViewModel;
-import com.etuproject.p2cloud.ui.login.LoginViewModelFactory;
 import com.etuproject.p2cloud.ui.main.CameraActivity;
+import com.etuproject.p2cloud.ui.main.TokenActivity;
+import com.manusunny.pinlock.PinListener;
 
 public class LoginActivity extends AppCompatActivity {
-
-    private LoginViewModel loginViewModel;
+    public static final int REQUEST_CODE_SET_PIN = 0;
+    public static final int REQUEST_CODE_CHANGE_PIN = 1;
+    public static final int REQUEST_CODE_CONFIRM_PIN = 2;
+    static SharedPreferences pinLockPrefs;
+    static SharedPreferences tokenPrefs;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        tokenPrefs = getSharedPreferences("tokenPrefs", MODE_PRIVATE);
+        pinLockPrefs = getSharedPreferences("PinLockPrefs", MODE_PRIVATE);
+        init();
+    }
 
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+    private void init() {
+        TextView setPin = (TextView) findViewById(R.id.set_pin);
+        TextView confirmPin = (TextView) findViewById(R.id.confirm_pin);
 
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
-            @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
-                    return;
-                }
-                loginButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
-                }
-                if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
-                }
-            }
-        });
+        String pin = pinLockPrefs.getString("pin", "");
+        if (pin.equals("")) {
+            confirmPin.setEnabled(false);
+        } else {
+            setPin.setText("Change PIN");
+        }
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    //updateUiWithUser(loginResult.getSuccess());
-                    startActivity(new Intent(LoginActivity.this,CameraActivity.class));
-                }
-                setResult(Activity.RESULT_OK);
+        View.OnClickListener clickListener = getOnClickListener();
+        setPin.setOnClickListener(clickListener);
+        confirmPin.setOnClickListener(clickListener);
+    }
 
-                //Complete and destroy login activity once successful
-                finish();
-            }
-        });
-
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-            }
-        };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
-                }
-                return false;
-            }
-        });
-
-        loginButton.setOnClickListener(new View.OnClickListener() {
+    @NonNull
+    private View.OnClickListener getOnClickListener() {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                int id = v.getId();
+                String pin = pinLockPrefs.getString("pin", "");
+
+                if (id == R.id.set_pin && pin.equals("")) {
+                    Intent intent = new Intent(LoginActivity.this, SetPinActivities.class);
+                    startActivityForResult(intent, REQUEST_CODE_SET_PIN);
+                } else if (id == R.id.set_pin) {
+                    Intent intent = new Intent(LoginActivity.this, ConfirmPinActivities.class);
+                    startActivityForResult(intent, REQUEST_CODE_CHANGE_PIN);
+                } else if (id == R.id.confirm_pin) {
+                    Intent intent = new Intent(LoginActivity.this, ConfirmPinActivities.class);
+                    startActivityForResult(intent, REQUEST_CODE_CONFIRM_PIN);
+                }
             }
-        });
+        };
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case REQUEST_CODE_SET_PIN : {
+                if(resultCode == PinListener.SUCCESS){
+                    //buradan token ekranına geçiş olacak
+                    Intent intent = new Intent(LoginActivity.this, TokenActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE_SET_PIN);
+                } else if(resultCode == PinListener.CANCELLED) {
+                    Toast.makeText(this, "Pin set cancelled", Toast.LENGTH_SHORT).show();
+                }
+                refreshActivity();
+                break;
+            }
+            case REQUEST_CODE_CHANGE_PIN : {
+                if(resultCode == PinListener.SUCCESS){
+                    Intent intent = new Intent(LoginActivity.this, SetPinActivities.class);
+                    startActivityForResult(intent, REQUEST_CODE_SET_PIN);
+                } else if(resultCode == PinListener.CANCELLED){
+                    Toast.makeText(this, "Pin change cancelled", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+            case REQUEST_CODE_CONFIRM_PIN : {
+                if(resultCode == PinListener.SUCCESS){
+                    //Toast.makeText(this, "Pin is correct :)", Toast.LENGTH_SHORT).show();
+                    String token1 = tokenPrefs.getString("token1", "");
+                    String token2 = tokenPrefs.getString("token2", "");
+                    Intent intent;
+                    if(token1 == null || token2 == null || token1.equals("") || token2.equals("")) {
+                        intent = new Intent(LoginActivity.this, TokenActivity.class);
+                    } else {
+                        intent = new Intent(LoginActivity.this, CameraActivity.class);
+                    }
+                    startActivityForResult(intent, REQUEST_CODE_SET_PIN);
+                } else if(resultCode == PinListener.CANCELLED) {
+                    Toast.makeText(this, "Pin confirm cancelled", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+
+        }
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    private void refreshActivity() {
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
+
 }

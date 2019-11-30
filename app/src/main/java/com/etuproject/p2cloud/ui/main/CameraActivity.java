@@ -114,6 +114,8 @@ public class CameraActivity extends AppCompatActivity {
                         } else if (menuItem.getTitle().toString().equals("Gallery")) {
                             closeCamera();
                             startActivity(new Intent(CameraActivity.this, GalleryActivity.class));
+                        } else if (menuItem.getTitle().toString().equals("Cloud Tokens")) {
+                            startActivity(new Intent(CameraActivity.this, TokenActivity.class));
                         }
                         return true;
                     }
