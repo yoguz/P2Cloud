@@ -20,7 +20,7 @@ public class Dropbox {
     // p2cloud.bil520@gmail.com - Bil420520.Siber
     // p2cloud.bil520.2@gmail.com - Bil420520.Siber
 
-    private static String ACCESS_TOKEN = "SPbzk9LCpzAAAAAAAAAADqikekU4CqzW4atXPrjoT9Zcu9nsQuW5Yzoxr0kXDR8f";
+    private static String ACCESS_TOKEN = "SPbzk9LCpzAAAAAAAAAAKxIQNrmXH4_STRmQdCvuJ0gBVp2zcjtMxWXmHuuL1K3G";
     private static final String PHOTOS_PATH_PREFIX = "/photos";
     private static final String KEYS_PATH_PREFIX = "/keys";
     private static DbxRequestConfig config;
@@ -60,9 +60,9 @@ public class Dropbox {
         ACCESS_TOKEN = accessToken;
     }
 
-    public static void list(String folderPath, List<Metadata> fileList) {
+    public static void list(List<Metadata> fileList) {
         try {
-            ListFolderResult result = client.files().listFolder(folderPath);
+            ListFolderResult result = client.files().listFolder(PHOTOS_PATH_PREFIX);
             while (true) {
                 for (Metadata metadata : result.getEntries()) {
                     fileList.add(metadata);

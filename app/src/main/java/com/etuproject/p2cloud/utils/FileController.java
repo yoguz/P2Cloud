@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
+import com.dropbox.core.v2.files.Metadata;
 import com.etuproject.p2cloud.data.model.Image;
 import com.etuproject.p2cloud.utils.cloud.Dropbox;
 import com.etuproject.p2cloud.utils.local.Local;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FileController {
 
@@ -30,13 +32,25 @@ public class FileController {
     }
 
     public static FileController setPrefs(String localKey, String remotePhotoToken, String remoteKeyToken) {
-        Local.setLocalKey(localKey);
-        Dropbox.setAccessToken(remotePhotoToken);
+        Local.getInstance().setLocalKey(localKey + localKey + localKey + localKey);
+        Dropbox.getInstance().setAccessToken(remotePhotoToken);
         return getInstance();
     }
 
     public static void sync() {
+        File[] localFiles = Local.list();
+        List< Metadata > remoteFiles = new ArrayList<>();
+        Dropbox.getInstance().list(remoteFiles);
 
+        for (Metadata remoteFile: remoteFiles) {
+            boolean doesExist = false;
+            for (File localFile: localFiles) {
+                if (remoteFile.getName().equals(localFile.getName())) {
+                    doesExist = true;
+                    break;
+                }
+            }
+        }
     }
 
     public static void save(byte[] bytes, String fileName) {
@@ -57,8 +71,8 @@ public class FileController {
         System.out.println("FileController || saveToCloud || key:" + new String(key));
         Crypto cryptoFunctions = new Crypto();
         byte[] encrypted = cryptoFunctions.encrypt(bytes, key);
-        Dropbox.upload(encrypted, fileName, Dropbox.FileType.PHOTO);
-        Dropbox.upload(key, fileName, Dropbox.FileType.KEY);
+        Dropbox.getInstance().upload(encrypted, fileName, Dropbox.FileType.PHOTO);
+        Dropbox.getInstance().upload(key, fileName, Dropbox.FileType.KEY);
     }
 
     public static void delete(String fileName) {
@@ -67,12 +81,12 @@ public class FileController {
     }
 
     private static void deleteFromLocal(String fileName) {
-         Local.delete(fileName);
+         Local.getInstance().delete(fileName);
     }
 
     private static void deleteFromCloud(String fileName, String fileHash) {
-        Dropbox.delete(fileName, Dropbox.FileType.PHOTO);
-        Dropbox.delete(fileHash, Dropbox.FileType.KEY);
+        Dropbox.getInstance().delete(fileName, Dropbox.FileType.PHOTO);
+        Dropbox.getInstance().delete(fileHash, Dropbox.FileType.KEY);
     }
 
     /**
@@ -83,7 +97,7 @@ public class FileController {
     public static void prepareData(ArrayList<Image> images){
         try {
             Crypto crypto = new Crypto();
-            File[] files = Local.list();
+            File[] files = Local.getInstance().list();
 
             for (int i = 0; i < files.length; i++) {
                 Image image = new Image();
