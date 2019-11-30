@@ -61,4 +61,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             img = (ImageView) view.findViewById(R.id.img);
         }
     }
+    public ArrayList<Image> getImages() {
+        return this.galleryList;
+    }
 }

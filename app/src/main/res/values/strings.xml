@@ -34,4 +34,5 @@
     <string name="ctoken2">Cloud Token 2</string>
     <string name="save">Save</string>
     <string name="button_forgot_pin">Forgot PIN</string>
+    <string name="delete">Delete</string>
 </resources>
