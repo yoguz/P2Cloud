@@ -1,6 +1,9 @@
 package com.etuproject.p2cloud.utils.local;
 
+import android.os.Build;
 import android.os.Environment;
+
+import com.dropbox.core.util.IOUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,6 +11,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Local {
 
@@ -53,9 +58,17 @@ public class Local {
         }
     }
 
-    public static String delete(String fileName) {
+    public static byte[] delete(String fileName) {
         File f = new File(fileName);
+        byte[] fileContent = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            try {
+                fileContent = Files.readAllBytes(Paths.get(fileName));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         f.delete();
-        return "asdasd";
+        return fileContent;
     }
 }

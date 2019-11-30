@@ -46,11 +46,13 @@ public class FileController {
     }
 
     public static void delete(String fileName) {
-        String deletedFileHash = deleteFromLocal(fileName);
-        deleteFromCloud(fileName, deletedFileHash);
+        byte[] deletedFile = deleteFromLocal(fileName);
+        Crypto cryptoFunctions = new Crypto();
+        String fileHash = cryptoFunctions.hash(deletedFile);
+        deleteFromCloud(fileName, fileHash);
     }
 
-    private static String deleteFromLocal(String fileName) {
+    private static byte[] deleteFromLocal(String fileName) {
         return Local.getInstance().delete(fileName);
     }
 
