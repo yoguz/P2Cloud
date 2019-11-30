@@ -59,11 +59,11 @@ public class Local {
     }
 
     public static byte[] delete(String fileName) {
-        File f = new File(fileName);
+        File f = new File(APP_FOLDER_POSIX + "/" +fileName);
         byte[] fileContent = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             try {
-                fileContent = Files.readAllBytes(Paths.get(fileName));
+                fileContent = Files.readAllBytes(Paths.get(APP_FOLDER_POSIX + "/" + fileName));
             } catch (IOException e) {
                 e.printStackTrace();
             }

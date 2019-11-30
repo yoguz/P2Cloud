@@ -48,7 +48,7 @@ public class FileController {
     public static void delete(String fileName) {
         byte[] deletedFile = deleteFromLocal(fileName);
         Crypto cryptoFunctions = new Crypto();
-        String fileHash = cryptoFunctions.hash(deletedFile);
+        String fileHash = cryptoFunctions.hash(cryptoFunctions.decrypt(deletedFile,null));
         deleteFromCloud(fileName, fileHash);
     }
 
