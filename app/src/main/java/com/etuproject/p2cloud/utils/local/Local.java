@@ -15,9 +15,13 @@ public class Local {
     private static final String APP_FOLDER_POSIX = Environment.getExternalStorageDirectory() + "/P2Cloud/Photo";
 
     private Local() {
+        System.out.println("Local constructor");
         File folder = new File(APP_FOLDER_POSIX);
         if (!folder.exists()) {
-            folder.mkdir();
+            boolean res = folder.mkdir();
+            if (res) {
+                System.out.println("Local || Succesfully created Folder.");
+            }
         }
     }
 
@@ -33,6 +37,7 @@ public class Local {
         try {
             output = new FileOutputStream(APP_FOLDER_POSIX + "/" + fileName);
             output.write(encyptedFile.getBytes(StandardCharsets.ISO_8859_1));
+            System.out.println("Local || Succesfully saved file: " + fileName);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

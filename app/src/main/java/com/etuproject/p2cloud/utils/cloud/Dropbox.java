@@ -9,7 +9,6 @@ import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.files.UploadErrorException;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +26,13 @@ public class Dropbox {
     private static DbxRequestConfig config;
     private static DbxClientV2 client;
 
+    public enum FileType {
+        PHOTO,
+        KEY
+    }
+
     private Dropbox() {
+        System.out.println("Dropbox constructor");
         config = DbxRequestConfig.newBuilder("dropbox/java-tutorial").build();
         client = new DbxClientV2(config, ACCESS_TOKEN);
 
@@ -68,10 +73,16 @@ public class Dropbox {
         }
     }
 
-    public static boolean uploadPhoto(String filePath, String remotePath) {
-        System.out.println("Dropbox:uploadPhoto | localPath:" + filePath + ", remotePath:" + PHOTOS_PATH_PREFIX + remotePath);
-        try (InputStream in = new FileInputStream(filePath)) {
-            FileMetadata metadata = client.files().uploadBuilder(PHOTOS_PATH_PREFIX + remotePath)
+    public static boolean upload(String fileContent, String fileName, FileType fileType) {
+        System.out.println("Dropbox:uploadPhoto | fileName:" + fileName + ", Type:" + fileType);
+        try (InputStream in = new ByteArrayInputStream(fileContent.getBytes())) {
+            String prefix;
+            if (fileType == FileType.PHOTO) {
+                prefix = PHOTOS_PATH_PREFIX;
+            } else {
+                prefix = KEYS_PATH_PREFIX;
+            }
+            FileMetadata metadata = client.files().uploadBuilder(prefix + "/" + fileName)
                     .uploadAndFinish(in);
             return true;
         } catch (FileNotFoundException e) {
@@ -86,19 +97,18 @@ public class Dropbox {
         return false;
     }
 
-    public static boolean uploadKey(String key, String remotePath) {
-        System.out.println("Dropbox:uploadPhoto | key:" + key + ", remotePath:" + KEYS_PATH_PREFIX + remotePath);
-        try (InputStream in = new ByteArrayInputStream(key.getBytes())) {
-            FileMetadata metadata = client.files().uploadBuilder(KEYS_PATH_PREFIX + remotePath)
-                    .uploadAndFinish(in);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (UploadErrorException e) {
-            e.printStackTrace();
+    public static void delete(String fileName, FileType fileType) {
+        System.out.println("Dropbox:uploadPhoto | fileName:" + fileName + ", Type:" + fileType);
+        String prefix;
+        if (fileType == FileType.PHOTO) {
+            prefix = PHOTOS_PATH_PREFIX;
+        } else {
+            prefix = KEYS_PATH_PREFIX;
+        }
+        try {
+            client.files().deleteV2(prefix + "/" + fileName);
         } catch (DbxException e) {
             e.printStackTrace();
         }
-        return false;
     }
 }

@@ -37,11 +37,12 @@ public class FileController {
     private static void saveToCloud(byte[] bytes, String fileName) {
         String byteString = new String(bytes, StandardCharsets.ISO_8859_1);
         String key = Crypto.generateKey();
+        System.out.println("FileController || saveToCloud || key:" + key);
         Crypto cryptoFunctions = new Crypto();
         String encryptedFile = cryptoFunctions.encrypt(byteString, key);
         String fileHash = cryptoFunctions.hash(encryptedFile);
-        Dropbox.getInstance().uploadPhoto(encryptedFile, fileName);
-        Dropbox.getInstance().uploadKey(key, fileHash);
+        Dropbox.getInstance().upload(encryptedFile, fileName, Dropbox.FileType.PHOTO);
+        Dropbox.getInstance().upload(key, fileHash, Dropbox.FileType.KEY);
     }
 
     public static void delete(String fileName) {
@@ -54,5 +55,7 @@ public class FileController {
     }
 
     private static void deleteFromCloud(String fileName, String fileHash) {
+        Dropbox.getInstance().delete(fileName, Dropbox.FileType.PHOTO);
+        Dropbox.getInstance().delete(fileHash, Dropbox.FileType.KEY);
     }
 }

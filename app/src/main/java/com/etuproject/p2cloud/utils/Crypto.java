@@ -33,11 +33,11 @@ public class Crypto {
             IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
 
             byte[] encrypted = cipher.doFinal(value.getBytes());
-            return Base64.encodeBase64String(encrypted);
+            return new String(Base64.encodeBase64(encrypted));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -60,7 +60,7 @@ public class Crypto {
             IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
             byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
 
@@ -99,7 +99,7 @@ public class Crypto {
             int keyBitSize = 128;
             keyGen.init(keyBitSize, secureRandom);
             SecretKey secretKey = keyGen.generateKey();
-            return secretKey.getFormat();
+            return new String(Base64.encodeBase64(secretKey.getEncoded()));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }

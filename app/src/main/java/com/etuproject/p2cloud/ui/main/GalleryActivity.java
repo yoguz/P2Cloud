@@ -83,7 +83,7 @@ public class GalleryActivity  extends AppCompatActivity {
                 InputStream stream = new FileInputStream(files[i]);
                 stream.read(fileContent);
                 String byteString = new String(fileContent, StandardCharsets.ISO_8859_1);
-                String decryptedString = aes.decrypt(byteString);
+                String decryptedString = aes.decrypt(byteString, null);
                 if(decryptedString != null) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(decryptedString.getBytes(StandardCharsets.ISO_8859_1), 0, decryptedString.getBytes(StandardCharsets.ISO_8859_1).length);
                     image.setImageBitmap(bitmap);
