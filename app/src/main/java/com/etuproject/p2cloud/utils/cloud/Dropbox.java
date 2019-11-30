@@ -20,7 +20,7 @@ public class Dropbox {
     // p2cloud.bil520@gmail.com - Bil420520.Siber
     // p2cloud.bil520.2@gmail.com - Bil420520.Siber
 
-    private static final String ACCESS_TOKEN = "SPbzk9LCpzAAAAAAAAAADqikekU4CqzW4atXPrjoT9Zcu9nsQuW5Yzoxr0kXDR8f";
+    private static String ACCESS_TOKEN = "SPbzk9LCpzAAAAAAAAAADqikekU4CqzW4atXPrjoT9Zcu9nsQuW5Yzoxr0kXDR8f";
     private static final String PHOTOS_PATH_PREFIX = "/photos";
     private static final String KEYS_PATH_PREFIX = "/keys";
     private static DbxRequestConfig config;
@@ -54,6 +54,10 @@ public class Dropbox {
             instance = new Dropbox();
         }
         return instance;
+    }
+
+    public static void setAccessToken(String accessToken) {
+        ACCESS_TOKEN = accessToken;
     }
 
     public static void list(String folderPath, List<Metadata> fileList) {

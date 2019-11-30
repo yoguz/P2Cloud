@@ -1,23 +1,19 @@
 package com.etuproject.p2cloud.utils.local;
 
-import android.os.Build;
 import android.os.Environment;
-
-import com.dropbox.core.util.IOUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class Local {
 
     private static Local instance;
     private static final String APP_FOLDER_POSIX = Environment.getExternalStorageDirectory() + "/P2Cloud/Photo";
+    private static byte[] LOCAL_KEY = null;
+
 
     private Local() {
         System.out.println("Local constructor");
@@ -35,6 +31,14 @@ public class Local {
             instance = new Local();
         }
         return instance;
+    }
+
+    public static void setLocalKey(String localKey) {
+        LOCAL_KEY = localKey.getBytes();
+    }
+
+    public static byte[] getLocalKey() {
+        return LOCAL_KEY;
     }
 
     public static void save(byte[] encyptedFile, String fileName) {
@@ -58,17 +62,13 @@ public class Local {
         }
     }
 
-    public static byte[] delete(String fileName) {
+    public static void delete(String fileName) {
         File f = new File(fileName);
-        byte[] fileContent = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            try {
-                fileContent = Files.readAllBytes(Paths.get(fileName));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         f.delete();
-        return fileContent;
+    }
+
+    public static File[] list() {
+        File directory = new File(APP_FOLDER_POSIX);
+        return directory.listFiles();
     }
 }

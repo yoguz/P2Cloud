@@ -2,6 +2,7 @@ package com.etuproject.p2cloud.ui.main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.TextureView;
@@ -63,6 +64,8 @@ public class CameraActivity extends AppCompatActivity {
     private final String TAG = "AndroidCameraApi";
     private TextureView textureView;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
+    static SharedPreferences pinLockPrefs;
+    static SharedPreferences tokenPrefs;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -83,6 +86,13 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pinLockPrefs = getSharedPreferences("PinLockPrefs", MODE_PRIVATE);
+        tokenPrefs = getSharedPreferences("tokenPrefs", MODE_PRIVATE);
+        FileController.setPrefs(pinLockPrefs.getString("pin", ""),
+                        tokenPrefs.getString("token1", ""),
+                        tokenPrefs.getString("token1", ""))
+                .sync();
+
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

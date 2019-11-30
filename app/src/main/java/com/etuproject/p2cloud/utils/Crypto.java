@@ -12,7 +12,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto {
-    private static String LOCAL_KEY = "aesEncryptionKey";
     private static String INIT_VECTOR = "encryptionIntVec";
 
     /**
@@ -20,14 +19,8 @@ public class Crypto {
      * @param value
      * @return String
      */
-    public byte[] encrypt(byte[] value, byte[] remoteKey) {
+    public byte[] encrypt(byte[] value, byte[] key) {
         try {
-            byte[] key;
-            if (remoteKey == null) {
-                key = LOCAL_KEY.getBytes();
-            } else {
-                key = remoteKey;
-            }
             IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
 
@@ -46,14 +39,8 @@ public class Crypto {
      * @param encrypted
      * @return String
      */
-    public byte[] decrypt(byte[] encrypted, byte[] remoteKey) {
+    public byte[] decrypt(byte[] encrypted, byte[] key) {
         try {
-            byte[] key;
-            if (remoteKey == null) {
-                key = LOCAL_KEY.getBytes();
-            } else {
-                key = remoteKey;
-            }
             IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
 
@@ -73,8 +60,6 @@ public class Crypto {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        //return bytesToHex(digest.digest(
-          //      plaintext.getBytes(StandardCharsets.ISO_8859_1)));
         return bytesToHex(digest.digest(plaintext));
     }
     public String bytesToHex(byte[] hash) {

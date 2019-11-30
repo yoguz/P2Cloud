@@ -15,6 +15,7 @@ import android.content.Intent;
 import com.etuproject.p2cloud.R;
 import com.etuproject.p2cloud.ui.main.CameraActivity;
 import com.etuproject.p2cloud.ui.main.TokenActivity;
+import com.etuproject.p2cloud.utils.FileController;
 import com.manusunny.pinlock.PinListener;
 
 public class LoginActivity extends AppCompatActivity {

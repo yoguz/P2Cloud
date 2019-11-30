@@ -45,7 +45,8 @@ public class GalleryActivity  extends AppCompatActivity {
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),2);
         recyclerView.setLayoutManager(layoutManager);
-        ArrayList<Image> createLists = prepareData();
+        ArrayList<Image> createLists = new ArrayList<>();
+        FileController.prepareData(createLists);
         final GalleryAdapter adapter = new GalleryAdapter(getApplicationContext(), createLists);
         recyclerView.setAdapter(adapter);
 
@@ -83,36 +84,5 @@ public class GalleryActivity  extends AppCompatActivity {
                 });
     }
 
-    /**
-     * P2Cloud dosya dizini altında yer alan bütün encrypted resimleri enrypt edip
-     * Image listesi olarak dönen method.
-     * @return ArrayList<Image>
-     */
-    private ArrayList<Image> prepareData(){
-        try {
-            Crypto aes = new Crypto();
-            String path = Environment.getExternalStorageDirectory() + "/P2Cloud/Photo";
-            File directory = new File(path);
-            File[] files = directory.listFiles();
-            ArrayList<Image> images = new ArrayList<>();
-            for (int i = 0; i < files.length; i++) {
-                Image image = new Image();
-                image.setImageTitle(files[i].getName());
-                byte fileContent[] = new byte[(int)files[i].length()];
-                InputStream stream = new FileInputStream(files[i]);
-                stream.read(fileContent);
-                String byteString = new String(fileContent, StandardCharsets.ISO_8859_1);
-                byte[] decrypted = aes.decrypt(fileContent, null);
-                if(decrypted != null) {
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(decrypted, 0, decrypted.length);
-                    image.setImageBitmap(bitmap);
-                    images.add(image);
-                }
-                stream.close();
-            }
-            return images;
-        } catch (IOException ex) {
-            return null;
-        }
-    }
+
 }
