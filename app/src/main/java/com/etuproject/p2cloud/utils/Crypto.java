@@ -14,18 +14,23 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto {
-    private static String key = "aesEncryptionKey";
-    private static String initVector = "encryptionIntVec";
+    private static String LOCAL_KEY = "aesEncryptionKey";
+    private static String INIT_VECTOR = "encryptionIntVec";
 
     /**
      * Aldığı stringi CBC modda AES ile encrypt edip dönen method.
      * @param value
      * @return String
      */
-    public String encrypt(String value) {
+    public String encrypt(String value, String remoteKey) {
         try {
-            key = generateKey();
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+            String key;
+            if (remoteKey == null) {
+                key = LOCAL_KEY;
+            } else {
+                key = remoteKey;
+            }
+            IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
@@ -44,9 +49,15 @@ public class Crypto {
      * @param encrypted
      * @return String
      */
-    public String decrypt(String encrypted) {
+    public String decrypt(String encrypted, String remoteKey) {
         try {
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+            String key;
+            if (remoteKey == null) {
+                key = LOCAL_KEY;
+            } else {
+                key = remoteKey;
+            }
+            IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
@@ -60,8 +71,13 @@ public class Crypto {
 
         return null;
     }
-    public String hash(String plaintext) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    public String hash(String plaintext) {
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
         return bytesToHex(digest.digest(
                 plaintext.getBytes(StandardCharsets.ISO_8859_1)));
     }
@@ -75,12 +91,18 @@ public class Crypto {
         return hexString.toString();
     }
 
-    public static String generateKey() throws NoSuchAlgorithmException {
-        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-        SecureRandom secureRandom = new SecureRandom();
-        int keyBitSize = 128;
-        keyGen.init(keyBitSize, secureRandom);
-        SecretKey secretKey = keyGen.generateKey();
-        return secretKey.getFormat();
+    public static String generateKey() {
+        KeyGenerator keyGen = null;
+        try {
+            keyGen = KeyGenerator.getInstance("AES");
+            SecureRandom secureRandom = new SecureRandom();
+            int keyBitSize = 128;
+            keyGen.init(keyBitSize, secureRandom);
+            SecretKey secretKey = keyGen.generateKey();
+            return secretKey.getFormat();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "RemoteEncryption";
     }
 }

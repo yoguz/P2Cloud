@@ -52,6 +52,7 @@ import java.util.List;
 import com.etuproject.p2cloud.R;
 import com.etuproject.p2cloud.utils.CompareSizesByArea;
 import com.etuproject.p2cloud.utils.Crypto;
+import com.etuproject.p2cloud.utils.FileController;
 import com.etuproject.p2cloud.utils.cloud.Dropbox;
 import com.google.android.material.navigation.NavigationView;
 
@@ -245,19 +246,6 @@ public class CameraActivity extends AppCompatActivity {
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
             captureBuilder.set(CaptureRequest.JPEG_QUALITY, (byte) 100);
 
-            //createFolder
-            String dirname = Environment.getExternalStorageDirectory() + "/P2Cloud";
-            File dir = new File(dirname);
-
-            dir.mkdir();
-
-            String dirname3 = Environment.getExternalStorageDirectory() + "/P2Cloud/Photo";
-            File dir3 = new File(dirname3);
-            if (!dir3.exists()) {
-                dir3.mkdir();
-            }
-
-            file = new File(dir3 + "/" + System.currentTimeMillis());
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
@@ -265,37 +253,7 @@ public class CameraActivity extends AppCompatActivity {
                         ByteBuffer buffer = image.getPlanes()[0].getBuffer();
                         byte[] bytes = new byte[buffer.capacity()];
                         buffer.get(bytes);
-                        save(bytes);
-                    } catch (IOException | NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (!file.getPath().equals("")) {
-                            Dropbox.getInstance().upload(file.getPath(), ""+System.currentTimeMillis());
-                        }
-                    }
-                }
-
-                /**
-                 * Kaydedilecek resim byte arrayini encrypt ediyoruz.
-                 * Encrypt edilmiş içeriğin stringi ile hashini alarak ayrı bir dosya oluşturuyor ve ismini bu hashi veriyoruz.
-                 * İçeriğine ise encryp için kullanılan keyi veriyoruz.
-                 * @param bytes
-                 * @throws IOException
-                 */
-                private void save(byte[] bytes) throws IOException, NoSuchAlgorithmException {
-                    OutputStream output = null;
-                    try {
-                        String byteString = new String(bytes, StandardCharsets.ISO_8859_1);
-                        Crypto cryptoFunctions = new Crypto();
-                        String encryptedString = cryptoFunctions.encrypt(byteString);
-                        String hexOfHash = cryptoFunctions.hash(encryptedString);
-                        //TODO: Buraya drive upload tamamlandığında eklemeler yapılacak.
-                        output = new FileOutputStream(file);
-                        output.write(encryptedString.getBytes(StandardCharsets.ISO_8859_1));
-                    } finally {
-                        if (null != output) {
-                            output.close();
-                        }
+                        FileController.getInstance().save(bytes, "" + System.currentTimeMillis());
                     }
                 }
             };
