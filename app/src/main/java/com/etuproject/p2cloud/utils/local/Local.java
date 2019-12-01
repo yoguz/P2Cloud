@@ -2,7 +2,9 @@ package com.etuproject.p2cloud.utils.local;
 
 import android.os.Environment;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -63,12 +65,28 @@ public class Local {
     }
 
     public static void delete(String fileName) {
-        File f = new File(fileName);
+        File f = new File(APP_FOLDER_POSIX + "/" + fileName);
         f.delete();
     }
 
     public static File[] list() {
         File directory = new File(APP_FOLDER_POSIX);
         return directory.listFiles();
+    }
+
+    public static byte[] read(String fileName) {
+        File file = new File(APP_FOLDER_POSIX + "/" + fileName);
+        int size = (int) file.length();
+        byte[] bytes = new byte[size];
+        try {
+            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+            buf.read(bytes, 0, bytes.length);
+            buf.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bytes;
     }
 }
