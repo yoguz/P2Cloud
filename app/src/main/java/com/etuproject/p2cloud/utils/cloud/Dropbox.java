@@ -9,9 +9,11 @@ import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.files.UploadErrorException;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 public class Dropbox {
@@ -20,7 +22,7 @@ public class Dropbox {
     // p2cloud.bil520@gmail.com - Bil420520.Siber
     // p2cloud.bil520.2@gmail.com - Bil420520.Siber
 
-    private static String ACCESS_TOKEN = "SPbzk9LCpzAAAAAAAAAAKxIQNrmXH4_STRmQdCvuJ0gBVp2zcjtMxWXmHuuL1K3G";
+    private static String ACCESS_TOKEN = "SPbzk9LCpzAAAAAAAAAALBMn4bGaeM8QsK1RRHe6k9RtmZ89Spu4xKpSQVxfkBWI";
     private static final String PHOTOS_PATH_PREFIX = "/photos";
     private static final String KEYS_PATH_PREFIX = "/keys";
     private static DbxRequestConfig config;
@@ -77,6 +79,22 @@ public class Dropbox {
         }
     }
 
+    public static byte[] download(String fileName, FileType fileType) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            if (fileType == FileType.PHOTO) {
+                client.files().downloadBuilder(PHOTOS_PATH_PREFIX + "/" + fileName).download(out);
+            } else {
+                client.files().downloadBuilder(KEYS_PATH_PREFIX + "/" + fileName).download(out);
+            }
+        } catch (DbxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return out.toByteArray();
+    }
+
     public static boolean upload(byte[] fileContent, String fileName, FileType fileType) {
         System.out.println("Dropbox:uploadPhoto | fileName:" + fileName + ", Type:" + fileType);
         try (InputStream in = new ByteArrayInputStream(fileContent)) {
@@ -102,7 +120,7 @@ public class Dropbox {
     }
 
     public static void delete(String fileName, FileType fileType) {
-        System.out.println("Dropbox:uploadPhoto | fileName:" + fileName + ", Type:" + fileType);
+        System.out.println("Dropbox:delete | fileName:" + fileName + ", Type:" + fileType);
         String prefix;
         if (fileType == FileType.PHOTO) {
             prefix = PHOTOS_PATH_PREFIX;
