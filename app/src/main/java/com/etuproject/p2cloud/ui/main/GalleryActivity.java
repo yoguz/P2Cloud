@@ -33,6 +33,7 @@ import java.util.ArrayList;
 
 public class GalleryActivity  extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
+    private GalleryAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +48,7 @@ public class GalleryActivity  extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         ArrayList<Image> createLists = new ArrayList<>();
         FileController.prepareData(createLists);
-        final GalleryAdapter adapter = new GalleryAdapter(getApplicationContext(), createLists);
+        adapter = new GalleryAdapter(getApplicationContext(), createLists);
         recyclerView.setAdapter(adapter);
 
         Button deleteBtn = findViewById(R.id.deleteBtn);
@@ -55,16 +56,17 @@ public class GalleryActivity  extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ArrayList<Image> newList = new ArrayList<>();
                 for(Image image : adapter.getImages()) {
-                    if(image.isSelected()) {
+                    if (image.isSelected()) {
                         FileController.delete(image.getImageTitle());
+                    } else {
+                        newList.add(image);
                     }
                 }
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+                adapter =  new GalleryAdapter(getApplicationContext(), newList);
+                recyclerView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
             }
         });
 

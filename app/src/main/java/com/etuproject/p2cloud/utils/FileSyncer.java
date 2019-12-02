@@ -33,18 +33,19 @@ public class FileSyncer implements Runnable {
                 downloadFromCloud(remoteFile.getName());
             }
         }
-
-        for (File localFile: localFiles) {
-            boolean doesExist = false;
-            for (Metadata remoteFile: remoteFiles) {
-                if (localFile.getName().equals(remoteFile.getName())) {
-                    doesExist = true;
-                    break;
+        if(localFiles != null) {
+            for (File localFile: localFiles) {
+                boolean doesExist = false;
+                for (Metadata remoteFile: remoteFiles) {
+                    if (localFile.getName().equals(remoteFile.getName())) {
+                        doesExist = true;
+                        break;
+                    }
                 }
-            }
 
-            if (!doesExist) {
-                uploadToCloud(localFile.getName());
+                if (!doesExist) {
+                    uploadToCloud(localFile.getName());
+                }
             }
         }
     }
