@@ -13,16 +13,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 public class Dropbox {
     private static Dropbox instance;
 
-    // p2cloud.bil520@gmail.com - Bil420520.Siber
-    // p2cloud.bil520.2@gmail.com - Bil420520.Siber
-
-    private static String ACCESS_TOKEN = "SPbzk9LCpzAAAAAAAAAALBMn4bGaeM8QsK1RRHe6k9RtmZ89Spu4xKpSQVxfkBWI";
+    private static String ACCESS_TOKEN = "";
     private static final String PHOTOS_PATH_PREFIX = "/photos";
     private static final String KEYS_PATH_PREFIX = "/keys";
     private static DbxRequestConfig config;

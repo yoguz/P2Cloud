@@ -4,11 +4,7 @@ import com.dropbox.core.v2.files.Metadata;
 import com.etuproject.p2cloud.utils.cloud.Dropbox;
 import com.etuproject.p2cloud.utils.local.Local;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

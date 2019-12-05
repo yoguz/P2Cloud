@@ -1,34 +1,21 @@
 package com.etuproject.p2cloud.ui.main;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.MenuItem;
-import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dropbox.core.v2.files.DeleteError;
 import com.etuproject.p2cloud.R;
 import com.etuproject.p2cloud.data.model.Image;
-import com.etuproject.p2cloud.utils.Crypto;
 import com.etuproject.p2cloud.utils.FileController;
 import com.google.android.material.navigation.NavigationView;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class GalleryActivity  extends AppCompatActivity {
